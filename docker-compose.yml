@@ -5,8 +5,10 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     env_file: .env
     volumes:
       - ./backend:/app
@@ -15,8 +17,10 @@ services:
     build: ./backend
     command: celery -A app.workers.celery_app worker --loglevel=info
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     env_file: .env
     volumes:
       - ./backend:/app
@@ -25,7 +29,8 @@ services:
     build: ./backend
     command: celery -A app.workers.celery_app beat --loglevel=info
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
     env_file: .env
     volumes:
       - ./backend:/app
@@ -40,11 +45,21 @@ services:
       POSTGRES_PASSWORD: clearnote
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clearnote -d clearnote"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   redis:
     image: redis:7-alpine
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
 volumes:
   postgres_data:
