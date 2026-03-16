@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir \
     alembic>=1.13.0 \
     "celery[redis]>=5.4.0" \
     boto3>=1.34.0 \
-    "python-jose[cryptography]>=3.3.0" \
+    "PyJWT>=2.8.0" \
     httpx>=0.27.0 \
     python-multipart>=0.0.9 \
     pytest>=8.2.0 \
@@ -26,8 +26,7 @@ RUN pip install --no-cache-dir \
     pytest-mock>=3.14.0 \
     freezegun>=1.5.0 \
     ruff>=0.5.0 \
-    mypy>=1.10.0 \
-    types-python-jose
+    mypy>=1.10.0
 
 # Copy source code
 COPY . .
