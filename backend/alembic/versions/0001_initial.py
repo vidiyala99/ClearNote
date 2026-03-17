@@ -63,7 +63,7 @@ def upgrade() -> None:
         sa.Column("doctor_name", sa.String(200), nullable=True),
         sa.Column(
             "status",
-            sa.Enum("pending", "processing", "ready", "failed", name="visit_status"),
+            visit_status,
             nullable=False,
             server_default="pending",
         ),
@@ -93,7 +93,7 @@ def upgrade() -> None:
         sa.Column("s3_key", sa.String(500), nullable=False),
         sa.Column(
             "status",
-            sa.Enum("queued", "processing", "done", "failed", name="job_status"),
+            job_status,
             nullable=False,
             server_default="queued",
         ),
@@ -132,10 +132,7 @@ def upgrade() -> None:
         sa.Column("action_items", postgresql.JSONB(), nullable=False, server_default="[]"),
         sa.Column(
             "urgency_tag",
-            sa.Enum(
-                "normal", "follow-up", "referral", "prescription", "urgent",
-                name="urgency_tag",
-            ),
+            urgency_tag,
             nullable=False,
             server_default="normal",
         ),
