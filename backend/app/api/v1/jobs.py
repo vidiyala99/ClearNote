@@ -153,15 +153,18 @@ def confirm_upload(job_id: uuid.UUID, db: Session = Depends(get_db)):
     # 4. Success -> trigger chain
     from celery import chain
     from app.workers.tasks.transcribe import transcribe_audio
+    from app.workers.tasks.summarize import summarize_visit
     from app.workers.tasks.finalize import finalize_visit
 
     visit.audio_s3_key = job.s3_key
-    visit.status = VisitStatus.pending # to trigger Celery process, or processing?
-    # Spec says: On success: update visits.audio_s3_key=s3_key, enqueue Celery, update jobs.celery_task_id
+    visit.status = VisitStatus.pending 
     
     # Trigger Celery chain async
-    # chain(transcribe_audio.s(visit_id), finalize_visit.s())
-    res = chain(transcribe_audio.s(visit.id), finalize_visit.s()).apply_async()
+    res = chain(
+        transcribe_audio.s(visit.id), 
+        summarize_visit.s(), 
+        finalize_visit.s()
+    ).apply_async()
 
     job.celery_task_id = res.id
     db.commit()

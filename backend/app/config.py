@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     s3_bucket_name: str = "clearnote-audio"
     aws_region: str = "us-east-1"
     cors_origins: str = "http://localhost:5173"
+    openai_api_key: str = ""
 
     @property
     def cors_origins_list(self) -> list[str]:
