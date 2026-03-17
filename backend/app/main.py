@@ -26,3 +26,10 @@ app.include_router(api_router)
 def health():
     return {"status": "ok", "version": "0.1.0"}
 
+
+@app.on_event("startup")
+async def startup_event():
+    import asyncio
+    from app.api.v1.websocket import manager
+    asyncio.create_task(manager.listen_to_redis())
+

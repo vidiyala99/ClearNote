@@ -30,6 +30,21 @@ def finalize_visit(visit_id: str):
             job.status = JobStatus.done
 
         db.commit()
+
+        # Publish notification via Redis for WebSockets
+        import redis
+        import json
+        from app.config import settings
+        try:
+            r = redis.from_url(settings.redis_url)
+            r.publish("notifications", json.dumps({
+                "type": "visit_ready",
+                "visit_id": str(visit_uuid),
+                "user_id": str(visit.user_id),
+                "status": "ready"
+            }))
+        except Exception:
+            pass # Non-blocking layout fail safeties
     finally:
         db.close()
 

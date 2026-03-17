@@ -21,6 +21,7 @@ RUN pip install --no-cache-dir \
     "PyJWT>=2.8.0" \
     httpx>=0.27.0 \
     python-multipart>=0.0.9 \
+    openai>=1.30.0 \
     pytest>=8.2.0 \
     pytest-postgresql>=6.0.0 \
     pytest-mock>=3.14.0 \
