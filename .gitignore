@@ -43,3 +43,6 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Local worktrees
+.worktrees/
