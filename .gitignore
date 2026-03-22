@@ -43,6 +43,12 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+.claude/
 
 # Local worktrees
 .worktrees/
+
+# Local/generated artifacts
+_plan_extract/
+output.txt
+backend/celerybeat-schedule
