@@ -12,7 +12,10 @@ from app.workers.tasks.finalize import finalize_visit
 from app.workers.tasks.cleanup import cleanup_orphans
 
 
-def test_transcribe_audio_updates_status(db: Session):
+UTC = datetime.timezone.utc
+
+
+def test_transcribe_audio_updates_status(db: Session, worker_sessionlocal, mocker):
     """Test transcribe_audio sets status to processing and upserts transcript."""
     # Setup
     user = User(id=uuid.uuid4(), email="w@e.com", clerk_user_id="cw_1")
@@ -22,10 +25,17 @@ def test_transcribe_audio_updates_status(db: Session):
     visit = Visit(
         id=uuid.uuid4(), user_id=user.id, title="Test",
         visit_date=datetime.date.today(), consent_at=datetime.datetime.utcnow(),
-        status=VisitStatus.pending
+        status=VisitStatus.pending, audio_s3_key="visits/test/audio"
     )
     db.add(visit)
     db.commit()
+
+    def _fake_download_file(_bucket, _key, destination):
+        with open(destination, "wb") as handle:
+            handle.write(b"fake-audio")
+
+    mocker.patch("app.workers.tasks.transcribe.boto3.client").return_value.download_file.side_effect = _fake_download_file
+    mocker.patch("app.workers.tasks.transcribe.AIService").return_value.transcribe_audio.return_value = "Test transcript"
 
     # Call task synchronously
     result_id = transcribe_audio(str(visit.id))
@@ -37,10 +47,10 @@ def test_transcribe_audio_updates_status(db: Session):
 
     transcript = db.query(Transcript).filter(Transcript.visit_id == visit.id).first()
     assert transcript is not None
-    assert transcript.raw_text == "This is a mock transcript of the visit."
+    assert transcript.raw_text == "Test transcript"
 
 
-def test_finalize_visit_updates_status(db: Session):
+def test_finalize_visit_updates_status(db: Session, worker_sessionlocal):
     """Test finalize_visit sets statuses to ready and done."""
     # Setup
     user = User(id=uuid.uuid4(), email="w2@e.com", clerk_user_id="cw_2")
@@ -53,6 +63,7 @@ def test_finalize_visit_updates_status(db: Session):
         status=VisitStatus.processing
     )
     db.add(visit)
+    db.commit()
 
     job = Job(id=uuid.uuid4(), visit_id=visit.id, s3_key="test", status=JobStatus.processing)
     db.add(job)
@@ -68,7 +79,7 @@ def test_finalize_visit_updates_status(db: Session):
     assert job.status == JobStatus.done
 
 
-def test_cleanup_orphans_fails_backdated_visits(db: Session):
+def test_cleanup_orphans_fails_backdated_visits(db: Session, worker_sessionlocal):
     """Test cleanup_orphans marks old pending visits as failed."""
     # Setup
     user = User(id=uuid.uuid4(), email="w3@e.com", clerk_user_id="cw_3")
@@ -76,7 +87,7 @@ def test_cleanup_orphans_fails_backdated_visits(db: Session):
     db.commit()
 
     # Backdated visit (31 mins ago)
-    old_time = datetime.datetime.utcnow() - datetime.timedelta(minutes=31)
+    old_time = datetime.datetime.now(UTC) - datetime.timedelta(minutes=31)
     old_visit = Visit(
         id=uuid.uuid4(), user_id=user.id, title="Old Visit",
         visit_date=datetime.date.today(), consent_at=datetime.datetime.utcnow(),
@@ -88,7 +99,7 @@ def test_cleanup_orphans_fails_backdated_visits(db: Session):
     new_visit = Visit(
         id=uuid.uuid4(), user_id=user.id, title="New Visit",
         visit_date=datetime.date.today(), consent_at=datetime.datetime.utcnow(),
-        status=VisitStatus.pending, created_at=datetime.datetime.utcnow()
+        status=VisitStatus.pending, created_at=datetime.datetime.now(UTC)
     )
     db.add(new_visit)
     db.commit()

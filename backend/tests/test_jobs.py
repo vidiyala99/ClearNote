@@ -80,6 +80,7 @@ def test_confirm_upload_magic_bytes_invalid(client: TestClient, db: Session, moc
         visit_date=datetime.date.today(), consent_at=datetime.datetime.utcnow()
     )
     db.add(visit)
+    db.commit()
 
     job = Job(id=uuid.uuid4(), visit_id=visit.id, s3_key="test/key", status=JobStatus.queued)
     db.add(job)
@@ -90,8 +91,12 @@ def test_confirm_upload_magic_bytes_invalid(client: TestClient, db: Session, moc
     mock_body = mocker.MagicMock()
     mock_body.read.return_value = b"NOT_AUDIO_FILE" # invalid
     mock_s3.return_value.get_object.return_value = {"Body": mock_body}
+    token = _create_mock_token({"sub": "c_1", "email": "u@e.com"})
 
-    response = client.post(f"/api/v1/jobs/{job.id}/confirm")
+    response = client.post(
+        f"/api/v1/jobs/{job.id}/confirm",
+        headers={"Authorization": f"Bearer {token}"},
+    )
     assert response.status_code == 422
 
 
@@ -106,6 +111,7 @@ def test_confirm_upload_success(client: TestClient, db: Session, mocker):
         visit_date=datetime.date.today(), consent_at=datetime.datetime.utcnow()
     )
     db.add(visit)
+    db.commit()
 
     job = Job(id=uuid.uuid4(), visit_id=visit.id, s3_key="test/key2", status=JobStatus.queued)
     db.add(job)
@@ -118,12 +124,16 @@ def test_confirm_upload_success(client: TestClient, db: Session, mocker):
     mock_s3.return_value.get_object.return_value = {"Body": mock_body}
 
     # Mock Celery chain.apply_async
-    mock_chain = mocker.patch("app.api.v1.jobs.chain")
+    mock_chain = mocker.patch("celery.chain")
     mock_async = mocker.MagicMock()
     mock_async.id = "task_id_123"
     mock_chain.return_value.apply_async.return_value = mock_async
+    token = _create_mock_token({"sub": "c_2", "email": "u2@e.com"})
 
-    response = client.post(f"/api/v1/jobs/{job.id}/confirm")
+    response = client.post(
+        f"/api/v1/jobs/{job.id}/confirm",
+        headers={"Authorization": f"Bearer {token}"},
+    )
     assert response.status_code == 200
     assert response.json() == {"status": "queued"}
 

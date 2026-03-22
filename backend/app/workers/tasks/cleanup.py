@@ -32,7 +32,7 @@ def cleanup_orphans():
     """
     db: Session = SessionLocal()
     try:
-        threshold = datetime.datetime.utcnow() - datetime.timedelta(minutes=30)
+        threshold = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(minutes=30)
         orphans = db.query(Visit).filter(
             Visit.status == VisitStatus.pending,
             Visit.created_at < threshold
