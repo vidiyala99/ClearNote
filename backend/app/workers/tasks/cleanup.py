@@ -1,4 +1,5 @@
 import datetime
+
 from botocore.exceptions import ClientError
 from sqlalchemy.orm import Session
 
@@ -20,7 +21,7 @@ def delete_s3_key(s3_key: str):
     )
     try:
         s3_client.delete_object(Bucket=settings.s3_bucket_name, Key=s3_key)
-    except ClientError as exc:
+    except ClientError:
         # Log and ignore — orphan cleanup is best-effort
         pass
 

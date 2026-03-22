@@ -1,14 +1,13 @@
-import uuid
 import datetime
+import uuid
+
 import jwt
-import pytest
-from botocore.exceptions import ClientError
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from app.db.models.job import Job, JobStatus
 from app.db.models.user import User
-from app.db.models.visit import Visit, VisitStatus
+from app.db.models.visit import Visit
 
 
 def _create_mock_token(payload: dict) -> str:

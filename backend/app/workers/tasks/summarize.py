@@ -1,11 +1,13 @@
 import uuid
+
 from sqlalchemy.dialects.postgresql import insert
 
-from app.workers.celery_app import celery_app
-from app.db.session import SessionLocal
-from app.db.models.transcript import Transcript
 from app.db.models.summary import Summary
+from app.db.models.transcript import Transcript
+from app.db.session import SessionLocal
 from app.services.ai import AIService
+from app.workers.celery_app import celery_app
+
 
 @celery_app.task(name="app.workers.tasks.summarize")
 def summarize_visit(visit_id: str):

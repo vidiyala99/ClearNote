@@ -1,12 +1,11 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
 import { api, setAuthToken } from "../lib/api";
 
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const { isSignedIn, isLoaded, getToken } = useAuth();
-    const [verified, setVerified] = useState(false);
+    const [, setVerified] = useState(false);
     const [verifying, setVerifying] = useState(true);
 
     useEffect(() => {

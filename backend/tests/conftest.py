@@ -1,6 +1,6 @@
-import uuid
 import platform
 import subprocess
+import uuid
 
 import pytest
 from fastapi.testclient import TestClient
@@ -14,7 +14,6 @@ import app.db.models  # noqa: F401 — registers all models
 from app.db.base import Base
 from app.db.session import get_db
 from app.main import app as fastapi_app
-
 
 if platform.system() == "Windows":
     PostgreSQLExecutor.BASE_PROC_START_COMMAND = (

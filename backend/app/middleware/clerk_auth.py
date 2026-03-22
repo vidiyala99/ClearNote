@@ -63,7 +63,6 @@ class ClerkAuthMiddleware(BaseHTTPMiddleware):
                 )
 
         try:
-            jwks_client = jwt.PyJWKClient.__new__(jwt.PyJWKClient)
             # Use the cached JWKS data
             signing_key = self._get_signing_key(token)
             payload = jwt.decode(
@@ -78,7 +77,6 @@ class ClerkAuthMiddleware(BaseHTTPMiddleware):
             return JSONResponse(
                 status_code=401, content={"error": {"code": "UNAUTHORIZED"}}
             )
-
 
         return await call_next(request)
 

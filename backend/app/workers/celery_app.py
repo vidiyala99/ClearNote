@@ -1,10 +1,12 @@
 from celery import Celery
+from celery.schedules import crontab
+
 from app.config import settings
 
 celery_app = Celery(
     "clearnote",
     broker=settings.redis_url,
-    backend=settings.redis_url
+    backend=settings.redis_url,
 )
 
 celery_app.conf.update(
@@ -19,12 +21,9 @@ celery_app.conf.update(
 # Discover tasks
 celery_app.autodiscover_tasks(["app.workers"])
 
-from celery.schedules import crontab
-
 celery_app.conf.beat_schedule = {
     "cleanup-orphans-15min": {
         "task": "app.workers.tasks.cleanup_orphans",
         "schedule": crontab(minute="*/15"),
     },
 }
-

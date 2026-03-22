@@ -1,6 +1,9 @@
 import json
+
 from openai import OpenAI
+
 from app.config import settings
+
 
 class AIService:
     def __init__(self):
@@ -14,13 +17,13 @@ class AIService:
         """
         if not self.client:
             raise ValueError("OPENAI_API_KEY is not configured in settings.")
-            
+
         with open(file_path, "rb") as audio_file:
             # response_format="text" directly returns a string
             transcript = self.client.audio.transcriptions.create(
-                model="whisper-1", 
+                model="whisper-1",
                 file=audio_file,
-                response_format="text"
+                response_format="text",
             )
         return transcript
 
@@ -32,11 +35,12 @@ class AIService:
             raise ValueError("OPENAI_API_KEY is not configured in settings.")
 
         prompt = f"""
-        You are a medical scribe. Convert the following clinician-patient interaction transcript into a structured SOAP Note document response IN JSON FORMAT.
-        
+        You are a medical scribe. Convert the following clinician-patient interaction
+        transcript into a structured SOAP Note document response IN JSON FORMAT.
+
         Transcript: 
         {transcript}
-        
+
         The JSON response MUST strictly follow this structure:
         {{
             "overview": "A detailed paragraph describing meeting overview and symptoms",
@@ -50,11 +54,11 @@ class AIService:
         response = self.client.chat.completions.create(
             model="gpt-4o",
             messages=[{"role": "user", "content": prompt}],
-            response_format={ "type": "json_object" }
+            response_format={"type": "json_object"},
         )
-        
+
         result = response.choices[0].message.content
         if not result:
             raise ValueError("Received empty response from OpenAI Completion.")
-            
+
         return json.loads(result)

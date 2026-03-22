@@ -1,5 +1,5 @@
 import boto3
-from botocore.exceptions import BotoCoreError, ClientError
+
 from app.config import settings
 
 _s3_client = None

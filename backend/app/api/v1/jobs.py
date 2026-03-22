@@ -1,13 +1,14 @@
 import uuid
+
 import boto3
+from botocore.exceptions import ClientError
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
-from botocore.exceptions import ClientError
 
 from app.config import settings
 from app.db.models.job import Job, JobStatus
-from app.db.models.visit import Visit, VisitStatus
 from app.db.models.user import User
+from app.db.models.visit import Visit, VisitStatus
 from app.db.session import get_db
 from app.schemas.job import TranscribeRequest, TranscribeResponse
 
@@ -152,9 +153,10 @@ def confirm_upload(job_id: uuid.UUID, db: Session = Depends(get_db)):
 
     # 4. Success -> trigger chain
     from celery import chain
-    from app.workers.tasks.transcribe import transcribe_audio
-    from app.workers.tasks.summarize import summarize_visit
+
     from app.workers.tasks.finalize import finalize_visit
+    from app.workers.tasks.summarize import summarize_visit
+    from app.workers.tasks.transcribe import transcribe_audio
 
     visit.audio_s3_key = job.s3_key
     visit.status = VisitStatus.pending 

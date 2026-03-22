@@ -1,4 +1,5 @@
 import uuid
+
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
@@ -58,16 +59,24 @@ def list_visits(request: Request, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-    visits = db.query(Visit).filter(Visit.user_id == user.id).order_by(Visit.visit_date.desc()).all()
-    
-    return [{
-        "id": str(v.id),
-        "title": v.title,
-        "visit_date": v.visit_date.isoformat() if v.visit_date else None,
-        "doctor_name": v.doctor_name,
-        "status": v.status.value,
-        "audio_s3_key": v.audio_s3_key
-    } for v in visits]
+    visits = (
+        db.query(Visit)
+        .filter(Visit.user_id == user.id)
+        .order_by(Visit.visit_date.desc())
+        .all()
+    )
+
+    return [
+        {
+            "id": str(v.id),
+            "title": v.title,
+            "visit_date": v.visit_date.isoformat() if v.visit_date else None,
+            "doctor_name": v.doctor_name,
+            "status": v.status.value,
+            "audio_s3_key": v.audio_s3_key,
+        }
+        for v in visits
+    ]
 
 
 @router.get("/visits/{visit_id}", response_model=dict)
@@ -80,7 +89,11 @@ def get_visit_detail(visit_id: uuid.UUID, request: Request, db: Session = Depend
     if not user:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-    visit = db.query(Visit).filter(Visit.id == visit_id, Visit.user_id == user.id).first()
+    visit = (
+        db.query(Visit)
+        .filter(Visit.id == visit_id, Visit.user_id == user.id)
+        .first()
+    )
     if not visit:
         raise HTTPException(status_code=404, detail="Visit not found")
 
@@ -91,7 +104,7 @@ def get_visit_detail(visit_id: uuid.UUID, request: Request, db: Session = Depend
         "doctor_name": visit.doctor_name,
         "status": visit.status.value,
         "audio_s3_key": visit.audio_s3_key,
-        "tags": visit.tags
+        "tags": visit.tags,
     }
 
 
@@ -104,12 +117,12 @@ def get_visit_transcript(visit_id: uuid.UUID, request: Request, db: Session = De
     # check ownership or similar loop loads
     transcript = db.query(Transcript).filter(Transcript.visit_id == visit_id).first()
     if not transcript:
-         raise HTTPException(status_code=404, detail="Transcript not ready or not found")
+        raise HTTPException(status_code=404, detail="Transcript not ready or not found")
 
     return {
-         "raw_text": transcript.raw_text,
-         "chunks": transcript.chunks,
-         "language_detected": transcript.language_detected
+        "raw_text": transcript.raw_text,
+        "chunks": transcript.chunks,
+        "language_detected": transcript.language_detected,
     }
 
 
@@ -121,12 +134,12 @@ def get_visit_summary(visit_id: uuid.UUID, request: Request, db: Session = Depen
     from app.db.models.summary import Summary
     summary = db.query(Summary).filter(Summary.visit_id == visit_id).first()
     if not summary:
-         raise HTTPException(status_code=404, detail="Summary not ready or not found")
+        raise HTTPException(status_code=404, detail="Summary not ready or not found")
 
     return {
-         "overview": summary.overview,
-         "medications": summary.medications,
-         "diagnoses": summary.diagnoses,
-         "action_items": summary.action_items,
-         "urgency_tag": summary.urgency_tag.value if summary.urgency_tag else "normal"
+        "overview": summary.overview,
+        "medications": summary.medications,
+        "diagnoses": summary.diagnoses,
+        "action_items": summary.action_items,
+        "urgency_tag": summary.urgency_tag.value if summary.urgency_tag else "normal",
     }

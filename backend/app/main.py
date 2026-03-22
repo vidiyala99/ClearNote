@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.config import settings
+
 from app.api.v1.router import api_router
+from app.config import settings
 from app.middleware.clerk_auth import ClerkAuthMiddleware
 
 app = FastAPI(title="ClearNote API", version="0.1.0")
@@ -30,6 +31,7 @@ def health():
 @app.on_event("startup")
 async def startup_event():
     import asyncio
+
     from app.api.v1.websocket import manager
     asyncio.create_task(manager.listen_to_redis())
 

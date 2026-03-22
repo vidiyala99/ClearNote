@@ -1,5 +1,6 @@
 import json
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query
+
+from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect
 
 router = APIRouter()
 
@@ -40,6 +41,7 @@ class ConnectionManager:
         Listen to Redis pubsub and broadcast payloads to local connected clients.
         """
         import redis.asyncio as aioredis
+
         from app.config import settings
         
         try:

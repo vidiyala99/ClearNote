@@ -1,15 +1,17 @@
-import uuid
 import os
 import tempfile
+import uuid
+
 import boto3
 from sqlalchemy.dialects.postgresql import insert
 
-from app.workers.celery_app import celery_app
-from app.db.session import SessionLocal
-from app.db.models.visit import Visit, VisitStatus
-from app.db.models.transcript import Transcript
-from app.services.ai import AIService
 from app.config import settings
+from app.db.models.transcript import Transcript
+from app.db.models.visit import Visit, VisitStatus
+from app.db.session import SessionLocal
+from app.services.ai import AIService
+from app.workers.celery_app import celery_app
+
 
 @celery_app.task(name="app.workers.tasks.transcribe")
 def transcribe_audio(visit_id: str):

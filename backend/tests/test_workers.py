@@ -1,16 +1,15 @@
-import uuid
 import datetime
+import uuid
+
 from sqlalchemy.orm import Session
 
 from app.db.models.job import Job, JobStatus
+from app.db.models.transcript import Transcript
 from app.db.models.user import User
 from app.db.models.visit import Visit, VisitStatus
-from app.db.models.transcript import Transcript
-
-from app.workers.tasks.transcribe import transcribe_audio
-from app.workers.tasks.finalize import finalize_visit
 from app.workers.tasks.cleanup import cleanup_orphans
-
+from app.workers.tasks.finalize import finalize_visit
+from app.workers.tasks.transcribe import transcribe_audio
 
 UTC = datetime.timezone.utc
 
@@ -34,8 +33,10 @@ def test_transcribe_audio_updates_status(db: Session, worker_sessionlocal, mocke
         with open(destination, "wb") as handle:
             handle.write(b"fake-audio")
 
-    mocker.patch("app.workers.tasks.transcribe.boto3.client").return_value.download_file.side_effect = _fake_download_file
-    mocker.patch("app.workers.tasks.transcribe.AIService").return_value.transcribe_audio.return_value = "Test transcript"
+    boto_client = mocker.patch("app.workers.tasks.transcribe.boto3.client")
+    boto_client.return_value.download_file.side_effect = _fake_download_file
+    ai_service = mocker.patch("app.workers.tasks.transcribe.AIService")
+    ai_service.return_value.transcribe_audio.return_value = "Test transcript"
 
     # Call task synchronously
     result_id = transcribe_audio(str(visit.id))
@@ -112,4 +113,4 @@ def test_cleanup_orphans_fails_backdated_visits(db: Session, worker_sessionlocal
     db.refresh(new_visit)
 
     assert old_visit.status == VisitStatus.failed
-    assert new_visit.status == VisitStatus.pending # stays pending
+    assert new_visit.status == VisitStatus.pending  # stays pending

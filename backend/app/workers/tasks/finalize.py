@@ -1,9 +1,9 @@
 import uuid
 
-from app.workers.celery_app import celery_app
-from app.db.session import SessionLocal
-from app.db.models.visit import Visit, VisitStatus
 from app.db.models.job import Job, JobStatus
+from app.db.models.visit import Visit, VisitStatus
+from app.db.session import SessionLocal
+from app.workers.celery_app import celery_app
 
 
 @celery_app.task(name="app.workers.tasks.finalize")
@@ -32,8 +32,10 @@ def finalize_visit(visit_id: str):
         db.commit()
 
         # Publish notification via Redis for WebSockets
-        import redis
         import json
+
+        import redis
+
         from app.config import settings
         try:
             r = redis.from_url(settings.redis_url)

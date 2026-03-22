@@ -1,8 +1,11 @@
-import uuid
 import enum
-from sqlalchemy import Text, Enum as SAEnum, ForeignKey, UniqueConstraint
+import uuid
+
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy import ForeignKey, Text, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.db.base import Base
 
 

@@ -3,9 +3,8 @@ Tests that all 5 tables and 3 ENUMs are created correctly by the schema setup.
 Uses the db_engine fixture (session-scoped) which runs create_all().
 """
 import uuid
-from datetime import datetime, date
+from datetime import date, datetime
 
-import pytest
 from sqlalchemy import inspect, text
 
 
@@ -27,14 +26,31 @@ def test_all_enums_created(db_engine):
 def test_users_table_columns(db_engine):
     inspector = inspect(db_engine)
     cols = {c["name"] for c in inspector.get_columns("users")}
-    assert cols == {"id", "email", "clerk_user_id", "preferred_language", "created_at", "deleted_at"}
+    assert cols == {
+        "id",
+        "email",
+        "clerk_user_id",
+        "preferred_language",
+        "created_at",
+        "deleted_at",
+    }
 
 
 def test_visits_table_columns(db_engine):
     inspector = inspect(db_engine)
     cols = {c["name"] for c in inspector.get_columns("visits")}
-    assert {"id", "user_id", "title", "visit_date", "consent_at", "status", "audio_s3_key",
-            "tags", "created_at", "updated_at"}.issubset(cols)
+    assert {
+        "id",
+        "user_id",
+        "title",
+        "visit_date",
+        "consent_at",
+        "status",
+        "audio_s3_key",
+        "tags",
+        "created_at",
+        "updated_at",
+    }.issubset(cols)
 
 
 def test_jobs_table_columns(db_engine):
@@ -80,9 +96,10 @@ def test_create_visit(db, test_user):
 
 
 def test_create_job_requires_s3_key(db, test_user):
-    from app.db.models.visit import Visit
-    from app.db.models.job import Job, JobStatus
     import uuid as _uuid
+
+    from app.db.models.job import Job, JobStatus
+    from app.db.models.visit import Visit
     visit_id = _uuid.uuid4()
     visit = Visit(
         id=visit_id,
@@ -107,9 +124,10 @@ def test_create_job_requires_s3_key(db, test_user):
 
 
 def test_visit_fk_cascade(db, test_user):
-    from app.db.models.visit import Visit
-    from app.db.models.job import Job
     import uuid as _uuid
+
+    from app.db.models.job import Job
+    from app.db.models.visit import Visit
     visit_id = _uuid.uuid4()
     visit = Visit(
         id=visit_id,

@@ -1,6 +1,8 @@
 import uuid
 from datetime import date, datetime
+
 from pydantic import BaseModel, ConfigDict
+
 from app.db.models.visit import VisitStatus
 
 

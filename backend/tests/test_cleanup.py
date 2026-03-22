@@ -1,5 +1,5 @@
-import uuid
-from datetime import date, datetime, timezone, timedelta
+from datetime import date, datetime, timedelta, timezone
+
 from app.db.models import Visit, VisitStatus
 
 
