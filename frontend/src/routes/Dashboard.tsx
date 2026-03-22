@@ -77,7 +77,7 @@ export default function Dashboard() {
         ) : (
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                {visits.map((visit) => (
-                 <div key={visit.id} className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md hover:border-cyan-200 hover:translate-y-[-1px] transition-all cursor-pointer">
+                 <Link to={`/visits/${visit.id}`} key={visit.id} className="block p-5 bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md hover:border-cyan-200 hover:translate-y-[-1px] transition-all cursor-pointer">
                    <div className="flex justify-between items-start">
                      <h3 className="font-semibold text-slate-800 text-base">{visit.title || "Untitled Visit"}</h3>
                      <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${visit.status === 'ready' ? 'bg-emerald-100 text-emerald-800' : visit.status === 'failed' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800 animate-pulse'}`}>
@@ -96,7 +96,7 @@ export default function Dashboard() {
                          <span>{visit.duration || "10:00"}</span>
                      </div>
                    </div>
-                 </div>
+                 </Link>
                ))}
              </div>
         )}

@@ -6,6 +6,7 @@ import Dashboard from "./routes/Dashboard";
 import NewVisit from "./routes/NewVisit";
 import SignInPage from "./routes/SignInPage";
 import SignUpPage from "./routes/SignUpPage";
+import VisitDetail from "./routes/VisitDetail";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Load clerk key safely without crashing hard early
@@ -30,6 +31,12 @@ function App() {
           <Route path="/visits/new" element={
             <ProtectedRoute>
               <NewVisit />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/visits/:id" element={
+            <ProtectedRoute>
+              <VisitDetail />
             </ProtectedRoute>
           } />
         </Routes>
