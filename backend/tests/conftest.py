@@ -1,6 +1,9 @@
+import os
 import platform
+import shutil
 import subprocess
 import uuid
+from types import SimpleNamespace
 
 import pytest
 from fastapi.testclient import TestClient
@@ -17,7 +20,7 @@ from app.main import app as fastapi_app
 
 if platform.system() == "Windows":
     PostgreSQLExecutor.BASE_PROC_START_COMMAND = (
-        '{executable} start -D "{datadir}" '
+        '"{executable}" start -D "{datadir}" '
         '-o "-F -p {port} -c logging_collector=off {postgres_options}" '
         '-l "{logfile}" {startparams}'
     )
@@ -32,12 +35,15 @@ if platform.system() == "Windows":
 
     PostgreSQLExecutor.stop = _windows_stop
 
+PG_CTL_PATH = shutil.which("pg_ctl")
+USE_EXTERNAL_POSTGRES = PG_CTL_PATH is None
 
-postgresql_proc = factories.postgresql_proc(
-    executable="pg_ctl",
-    port=None,
-    dbname="clearnote_test",
-)
+if not USE_EXTERNAL_POSTGRES:
+    postgresql_proc = factories.postgresql_proc(
+        executable="pg_ctl",
+        port=None,
+        dbname="clearnote_test",
+    )
 
 
 def _make_db_url(p) -> str:
@@ -45,24 +51,32 @@ def _make_db_url(p) -> str:
 
 
 @pytest.fixture(scope="session")
-def db_engine(postgresql_proc):
-    """Create engine + schema once per test session against a temporary postgres process."""
-    url = _make_db_url(postgresql_proc)
-    janitor = DatabaseJanitor(
-        user=postgresql_proc.user,
-        host=postgresql_proc.host,
-        port=postgresql_proc.port,
-        dbname=postgresql_proc.dbname,
-        template_dbname=postgresql_proc.template_dbname,
-        version=postgresql_proc.version,
-        password=postgresql_proc.password,
+def postgres_runtime(request):
+    if not USE_EXTERNAL_POSTGRES:
+        return request.getfixturevalue("postgresql_proc")
+
+    return SimpleNamespace(
+        user=os.getenv("POSTGRES_USER", "clearnote"),
+        password=os.getenv("POSTGRES_PASSWORD", "clearnote"),
+        host=os.getenv("POSTGRES_HOST", "127.0.0.1"),
+        port=int(os.getenv("POSTGRES_PORT", "5432")),
+        dbname=os.getenv("POSTGRES_DB", "clearnote_test"),
+        template_dbname=os.getenv("POSTGRES_TEMPLATE_DB", "template1"),
+        version=16,
     )
 
-    with janitor:
-        engine = create_engine(url, pool_pre_ping=True)
 
-        # Create all ENUMs and tables
+@pytest.fixture(scope="session")
+def db_engine(postgres_runtime):
+    """Create engine + schema once per test session against a postgres runtime."""
+    url = _make_db_url(postgres_runtime)
+
+    def _prepare_engine():
+        engine = create_engine(url, pool_pre_ping=True)
         with engine.begin() as conn:
+            if USE_EXTERNAL_POSTGRES:
+                conn.execute(text("DROP SCHEMA IF EXISTS public CASCADE"))
+                conn.execute(text("CREATE SCHEMA public"))
             conn.execute(
                 text(
                     "DO $$ BEGIN "
@@ -86,9 +100,31 @@ def db_engine(postgresql_proc):
                 )
             )
         Base.metadata.create_all(engine)
+        return engine
 
+    if USE_EXTERNAL_POSTGRES:
+        engine = _prepare_engine()
         yield engine
+        Base.metadata.drop_all(engine)
+        with engine.begin() as conn:
+            conn.execute(text("DROP SCHEMA IF EXISTS public CASCADE"))
+            conn.execute(text("CREATE SCHEMA public"))
+        engine.dispose()
+        return
 
+    janitor = DatabaseJanitor(
+        user=postgres_runtime.user,
+        host=postgres_runtime.host,
+        port=postgres_runtime.port,
+        dbname=postgres_runtime.dbname,
+        template_dbname=postgres_runtime.template_dbname,
+        version=postgres_runtime.version,
+        password=postgres_runtime.password,
+    )
+
+    with janitor:
+        engine = _prepare_engine()
+        yield engine
         Base.metadata.drop_all(engine)
         engine.dispose()
 

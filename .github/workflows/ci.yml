@@ -49,6 +49,12 @@ jobs:
           npx mypy app/ || mypy app/
 
       - name: Run Pytest
+        env:
+          POSTGRES_HOST: 127.0.0.1
+          POSTGRES_PORT: 5432
+          POSTGRES_DB: clearnote_test
+          POSTGRES_USER: clearnote
+          POSTGRES_PASSWORD: clearnote
         run: |
           cd backend
           pytest tests/
