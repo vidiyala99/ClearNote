@@ -17,6 +17,19 @@ export default function Dashboard() {
   const { isSignedIn, getToken } = useAuth();
   const [visits, setVisits] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const primaryAction = isSignedIn
+    ? {
+        to: "/visits/new",
+        label: "+ New Visit",
+        className:
+          "px-4 py-2 text-sm text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition shadow-sm",
+      }
+    : {
+        to: "/sign-up",
+        label: "Sign up to create visits",
+        className:
+          "px-4 py-2 text-sm text-cyan-700 bg-cyan-50 rounded-md hover:bg-cyan-100 transition shadow-sm border border-cyan-200",
+      };
 
   // 1. Fetch real visits or fallback to demo data
   useEffect(() => {
@@ -57,7 +70,9 @@ export default function Dashboard() {
       <nav className="flex justify-between items-center px-6 py-4 bg-white border-b shadow-sm">
         <h1 className="text-xl font-bold font-heading text-slate-800">ClearNote</h1>
         <div className="flex gap-4 items-center">
-          <Link to="/visits/new" className="px-4 py-2 text-sm text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition shadow-sm">+ New Visit</Link>
+          <Link to={primaryAction.to} className={primaryAction.className}>
+            {primaryAction.label}
+          </Link>
           {isSignedIn ? (
             <UserButton afterSignOutUrl="/" />
           ) : (

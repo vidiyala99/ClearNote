@@ -106,6 +106,12 @@ export default function Landing() {
             >
               Sign In
             </Link>
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-cyan-950/25 text-white font-semibold rounded-xl border border-white/20 hover:bg-cyan-950/35 transition-colors duration-150 text-base cursor-pointer"
+            >
+              View Demo
+            </Link>
           </div>
         </div>
 
@@ -169,6 +175,14 @@ export default function Landing() {
           >
             Get Started Free <ChevronRight className="w-5 h-5" aria-hidden="true" />
           </Link>
+          <div className="mt-4 relative">
+            <Link
+              to="/dashboard"
+              className="text-sm font-medium text-cyan-50/90 hover:text-white transition-colors duration-150"
+            >
+              Or preview the demo dashboard
+            </Link>
+          </div>
         </div>
       </section>
 

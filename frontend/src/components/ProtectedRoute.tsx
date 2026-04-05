@@ -1,16 +1,24 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { api, setAuthToken } from "../lib/api";
 
 
-export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
+export default function ProtectedRoute({
+    children,
+    allowGuestPreview = false,
+}: {
+    children: React.ReactNode;
+    allowGuestPreview?: boolean;
+}) {
     const { isSignedIn, isLoaded, getToken } = useAuth();
-    const [, setVerified] = useState(false);
+    const [verified, setVerified] = useState(false);
     const [verifying, setVerifying] = useState(true);
 
     useEffect(() => {
         async function verifyUser() {
             if (!isSignedIn) {
+                setVerified(false);
                 setVerifying(false);
                 return;
             }
@@ -30,6 +38,10 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
         verifyUser();
     }, [isSignedIn, getToken]);
 
+    if (allowGuestPreview && !isSignedIn) {
+        return <>{children}</>;
+    }
+
     if (!isLoaded || verifying) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-slate-50 font-body" aria-live="polite" aria-label="Checking authorization">
@@ -41,10 +53,9 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
         )
     }
 
-    // Bypass redirect for local layout testing
-    // if (!isSignedIn || !verified) {
-    //     return <Navigate to="/sign-in" replace />;
-    // }
+    if (!isSignedIn || !verified) {
+        return <Navigate to="/sign-in" replace />;
+    }
 
     return <>{children}</>;
 }

@@ -1,4 +1,5 @@
 import { SignIn } from "@clerk/clerk-react";
+import { Link } from "react-router-dom";
 import { Activity, Mic, FileText, ShieldCheck } from "lucide-react";
 
 const brandPoints = [
@@ -44,8 +45,14 @@ export default function SignInPage() {
       </div>
 
       {/* ── Right Clerk panel ── */}
-      <div className="flex-1 flex items-center justify-center p-8">
+      <div className="flex-1 flex flex-col items-center justify-center gap-5 p-8">
         <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
+        <Link
+          to="/dashboard"
+          className="text-sm font-medium text-cyan-700 hover:text-cyan-800 transition-colors duration-150"
+        >
+          Preview the demo dashboard instead
+        </Link>
       </div>
     </div>
   );
