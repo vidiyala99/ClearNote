@@ -9,9 +9,12 @@ from app.db.models.job import Job, JobStatus
 from app.db.models.user import User
 from app.db.models.visit import Visit
 
+TEST_JWT_SECRET = "test-secret-key-with-32-characters"
+UTC = datetime.timezone.utc
+
 
 def _create_mock_token(payload: dict) -> str:
-    return jwt.encode(payload, "secret", algorithm="HS256")
+    return jwt.encode(payload, TEST_JWT_SECRET, algorithm="HS256")
 
 
 def test_transcribe_unauthorized(client: TestClient):
@@ -36,7 +39,7 @@ def test_transcribe_success(client: TestClient, db: Session, mocker):
         user_id=user.id,
         title="Consultation",
         visit_date=datetime.date.today(),
-        consent_at=datetime.datetime.utcnow()
+        consent_at=datetime.datetime.now(UTC)
     )
     db.add(visit)
     db.commit()
@@ -76,7 +79,7 @@ def test_confirm_upload_magic_bytes_invalid(client: TestClient, db: Session, moc
 
     visit = Visit(
         id=uuid.uuid4(), user_id=user.id, title="Test",
-        visit_date=datetime.date.today(), consent_at=datetime.datetime.utcnow()
+        visit_date=datetime.date.today(), consent_at=datetime.datetime.now(UTC)
     )
     db.add(visit)
     db.commit()
@@ -107,7 +110,7 @@ def test_confirm_upload_success(client: TestClient, db: Session, mocker):
 
     visit = Visit(
         id=uuid.uuid4(), user_id=user.id, title="Test",
-        visit_date=datetime.date.today(), consent_at=datetime.datetime.utcnow()
+        visit_date=datetime.date.today(), consent_at=datetime.datetime.now(UTC)
     )
     db.add(visit)
     db.commit()

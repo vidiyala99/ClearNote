@@ -23,7 +23,7 @@ def test_transcribe_audio_updates_status(db: Session, worker_sessionlocal, mocke
 
     visit = Visit(
         id=uuid.uuid4(), user_id=user.id, title="Test",
-        visit_date=datetime.date.today(), consent_at=datetime.datetime.utcnow(),
+        visit_date=datetime.date.today(), consent_at=datetime.datetime.now(UTC),
         status=VisitStatus.pending, audio_s3_key="visits/test/audio"
     )
     db.add(visit)
@@ -60,7 +60,7 @@ def test_finalize_visit_updates_status(db: Session, worker_sessionlocal):
 
     visit = Visit(
         id=uuid.uuid4(), user_id=user.id, title="Test",
-        visit_date=datetime.date.today(), consent_at=datetime.datetime.utcnow(),
+        visit_date=datetime.date.today(), consent_at=datetime.datetime.now(UTC),
         status=VisitStatus.processing
     )
     db.add(visit)
@@ -91,7 +91,7 @@ def test_cleanup_orphans_fails_backdated_visits(db: Session, worker_sessionlocal
     old_time = datetime.datetime.now(UTC) - datetime.timedelta(minutes=31)
     old_visit = Visit(
         id=uuid.uuid4(), user_id=user.id, title="Old Visit",
-        visit_date=datetime.date.today(), consent_at=datetime.datetime.utcnow(),
+        visit_date=datetime.date.today(), consent_at=datetime.datetime.now(UTC),
         status=VisitStatus.pending, created_at=old_time
     )
     db.add(old_visit)
@@ -99,7 +99,7 @@ def test_cleanup_orphans_fails_backdated_visits(db: Session, worker_sessionlocal
     # Fresh visit (5 mins ago)
     new_visit = Visit(
         id=uuid.uuid4(), user_id=user.id, title="New Visit",
-        visit_date=datetime.date.today(), consent_at=datetime.datetime.utcnow(),
+        visit_date=datetime.date.today(), consent_at=datetime.datetime.now(UTC),
         status=VisitStatus.pending, created_at=datetime.datetime.now(UTC)
     )
     db.add(new_visit)

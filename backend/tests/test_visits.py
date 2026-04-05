@@ -1,5 +1,5 @@
 import uuid
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 
 import jwt
 from fastapi.testclient import TestClient
@@ -8,9 +8,11 @@ from sqlalchemy.orm import Session
 from app.db.models.user import User
 from app.db.models.visit import Visit
 
+TEST_JWT_SECRET = "test-secret-key-with-32-characters"
+
 
 def _create_mock_token(payload: dict) -> str:
-    return jwt.encode(payload, "secret", algorithm="HS256")
+    return jwt.encode(payload, TEST_JWT_SECRET, algorithm="HS256")
 
 
 def test_create_visit_unauthorized(client: TestClient):
@@ -39,7 +41,7 @@ def test_create_visit_success(client: TestClient, db: Session):
         "title": "Patient Consultation",
         "visit_date": str(date.today()),
         "doctor_name": "Dr. Smith",
-        "consent_at": (datetime.utcnow() - timedelta(minutes=5)).isoformat() + "Z"
+        "consent_at": (datetime.now(UTC) - timedelta(minutes=5)).isoformat().replace("+00:00", "Z")
     }
 
     response = client.post(

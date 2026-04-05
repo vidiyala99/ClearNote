@@ -6,10 +6,12 @@ from sqlalchemy.orm import Session
 
 from app.db.models.user import User
 
+TEST_JWT_SECRET = "test-secret-key-with-32-characters"
+
 
 def _create_mock_token(payload: dict) -> str:
     """Create an unverified RS256 token that test/dev auth middleware can decode."""
-    return jwt.encode(payload, "secret", algorithm="HS256")
+    return jwt.encode(payload, TEST_JWT_SECRET, algorithm="HS256")
 
 
 def test_users_me_unauthorized(client: TestClient):

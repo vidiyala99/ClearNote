@@ -11,6 +11,7 @@ version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
   "fastapi>=0.111.0",
+  "starlette>=0.37.2,<0.38.0",
   "uvicorn[standard]>=0.30.0",
   "gunicorn>=22.0.0",
   "pydantic-settings>=2.3.0",
@@ -56,4 +57,7 @@ addopts = [
   "--postgresql-user=clearnote",
   "--postgresql-password=clearnote",
   "--postgresql-dbname=clearnote_test",
+]
+filterwarnings = [
+  "ignore:Please use `import python_multipart` instead\\.:PendingDeprecationWarning",
 ]

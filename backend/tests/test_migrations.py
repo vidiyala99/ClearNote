@@ -3,7 +3,7 @@ Tests that all 5 tables and 3 ENUMs are created correctly by the schema setup.
 Uses the db_engine fixture (session-scoped) which runs create_all().
 """
 import uuid
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 
 from sqlalchemy import inspect, text
 
@@ -86,7 +86,7 @@ def test_create_visit(db, test_user):
         user_id=test_user.id,
         title="Cardiology Checkup",
         visit_date=date(2026, 3, 14),
-        consent_at=datetime.utcnow(),
+        consent_at=datetime.now(UTC),
     )
     db.add(visit)
     db.flush()
@@ -106,7 +106,7 @@ def test_create_job_requires_s3_key(db, test_user):
         user_id=test_user.id,
         title="Test Visit",
         visit_date=date(2026, 3, 14),
-        consent_at=datetime.utcnow(),
+        consent_at=datetime.now(UTC),
     )
     db.add(visit)
     db.flush()
@@ -134,7 +134,7 @@ def test_visit_fk_cascade(db, test_user):
         user_id=test_user.id,
         title="Cascade Test",
         visit_date=date(2026, 3, 14),
-        consent_at=datetime.utcnow(),
+        consent_at=datetime.now(UTC),
     )
     db.add(visit)
     db.flush()
