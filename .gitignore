@@ -44,6 +44,7 @@ Thumbs.db
 .idea/
 *.swp
 .claude/
+.codex/
 
 # Local worktrees
 .worktrees/
@@ -52,3 +53,5 @@ Thumbs.db
 _plan_extract/
 output.txt
 backend/celerybeat-schedule
+frontend/npm_install_log.txt
+ClearNote_Production_Plan.docx
