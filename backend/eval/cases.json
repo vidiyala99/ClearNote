@@ -1,0 +1,167 @@
+[
+  {
+    "id": "case_001",
+    "scenario": "Upper respiratory infection",
+    "transcript": "Doctor: Good morning. What brings you in today?\nPatient: I've had a runny nose, sore throat, and a mild fever for about three days now. I feel pretty wiped out.\nDoctor: Any cough or shortness of breath?\nPatient: A little dry cough but nothing bad. No trouble breathing.\nDoctor: Temperature at home?\nPatient: Around 99.8, nothing too high.\nDoctor: I'm going to take a look at your throat and ears. Your throat is a bit red and inflamed but no pus. Ears are clear. Lungs sound fine. This looks like a viral upper respiratory infection — a common cold.\nPatient: Do I need antibiotics?\nDoctor: No, antibiotics won't help here since it's viral. I'd like you to take ibuprofen 400mg every six hours as needed for the fever and throat pain. You can also use pseudoephedrine 30mg for the congestion. Drink plenty of fluids and rest.\nPatient: How long until I feel better?\nDoctor: Typically seven to ten days. Come back if your fever goes above 103 or you develop significant difficulty swallowing or breathing.",
+    "expected": {
+      "urgency_tag": "normal",
+      "medications": ["ibuprofen 400mg", "pseudoephedrine 30mg"],
+      "diagnoses": ["upper respiratory infection", "viral pharyngitis"],
+      "action_items": ["rest and increase fluid intake", "return if fever exceeds 103F or symptoms worsen"]
+    }
+  },
+  {
+    "id": "case_002",
+    "scenario": "Hypertension medication adjustment",
+    "transcript": "Doctor: Hi, come on in. How have you been feeling since we adjusted your lisinopril last month?\nPatient: Better, but I've been having this dry cough that won't go away. It started about two weeks after I started the new dose.\nDoctor: That cough is a well-known side effect of lisinopril. Let's switch you to losartan 50mg once daily, which is an ARB and works similarly without that side effect.\nPatient: Will I need any labs?\nDoctor: Yes, I want you to get a basic metabolic panel and a repeat blood pressure check in four weeks. Your reading today is 148 over 92, still a bit high. Try to reduce sodium intake and keep up the walking routine you mentioned.\nPatient: Should I stop the lisinopril today?\nDoctor: Stop it tonight and start losartan tomorrow morning. Call us if you feel dizzy or your readings spike above 160.",
+    "expected": {
+      "urgency_tag": "prescription",
+      "medications": ["losartan 50mg", "lisinopril"],
+      "diagnoses": ["hypertension", "lisinopril-induced cough"],
+      "action_items": ["stop lisinopril and start losartan 50mg", "basic metabolic panel in 4 weeks", "blood pressure recheck in 4 weeks", "reduce sodium intake"]
+    }
+  },
+  {
+    "id": "case_003",
+    "scenario": "Type 2 diabetes management follow-up",
+    "transcript": "Doctor: Good afternoon. I have your A1C results from last week — it came back at 8.1, which is down from 8.9, so you're moving in the right direction.\nPatient: I've been trying to cut out the sugary drinks like you said.\nDoctor: That's excellent, keep it up. Your fasting glucose this morning is 142. I want to continue metformin 1000mg twice daily. I'm also going to add empagliflozin 10mg once daily to help bring the glucose down further and it has some cardiovascular benefits.\nPatient: Any side effects I should know about?\nDoctor: Empagliflozin can cause urinary tract infections and genital yeast infections. Stay well hydrated. Also schedule a urine microalbumin test and a dilated eye exam within the next two months.\nPatient: I'll do that.\nDoctor: I want to see you back in three months for a repeat A1C.",
+    "expected": {
+      "urgency_tag": "follow-up",
+      "medications": ["metformin 1000mg twice daily", "empagliflozin 10mg once daily"],
+      "diagnoses": ["type 2 diabetes mellitus"],
+      "action_items": ["continue metformin 1000mg", "start empagliflozin 10mg", "urine microalbumin test", "dilated eye exam", "return in 3 months for repeat A1C"]
+    }
+  },
+  {
+    "id": "case_004",
+    "scenario": "Acute chest pain - urgent",
+    "transcript": "Doctor: Tell me about this chest pain. When did it start?\nPatient: About two hours ago. It's a heavy pressure right in the middle of my chest. It goes up into my left arm a little.\nDoctor: Are you short of breath? Sweating?\nPatient: Yes, I'm sweating and I feel nauseous.\nDoctor: Do you have any history of heart problems?\nPatient: My father had a heart attack at 58. I'm 54.\nDoctor: We need to act fast. I'm ordering an EKG right now, troponin, and a full cardiac panel. I'm also giving you aspirin 325mg to chew right now.\nPatient: Is it serious?\nDoctor: Your EKG shows ST elevation in leads two, three, and aVF. This is a myocardial infarction. I'm calling the cath lab immediately and you are being transferred to the emergency department for primary PCI. Do not eat or drink anything.",
+    "expected": {
+      "urgency_tag": "urgent",
+      "medications": ["aspirin 325mg"],
+      "diagnoses": ["ST-elevation myocardial infarction", "inferior STEMI"],
+      "action_items": ["transfer to emergency department immediately", "activate cath lab for primary PCI", "troponin and cardiac panel labs", "NPO status"]
+    }
+  },
+  {
+    "id": "case_005",
+    "scenario": "Anxiety and depression follow-up",
+    "transcript": "Doctor: How have you been since we started sertraline six weeks ago?\nPatient: Honestly a bit better. I'm not feeling as low as I was but the anxiety is still there, especially at work.\nDoctor: Any side effects — sleep changes, appetite, or anything sexual?\nPatient: I've had trouble sleeping for the first two weeks but that's mostly settled. Appetite is fine.\nDoctor: Good. I'd like to increase the sertraline from 50mg to 100mg once daily. I also want to strongly recommend we get you started with a therapist for cognitive behavioral therapy alongside the medication.\nPatient: Is that covered by insurance?\nDoctor: Usually yes for mental health. I'll give you a referral to our behavioral health department. Come back in four weeks and if the sleep is disrupted again we can discuss adding low-dose melatonin.",
+    "expected": {
+      "urgency_tag": "follow-up",
+      "medications": ["sertraline 100mg once daily"],
+      "diagnoses": ["generalized anxiety disorder", "major depressive disorder"],
+      "action_items": ["increase sertraline to 100mg", "referral to behavioral health for CBT", "return in 4 weeks", "consider melatonin if sleep disruption returns"]
+    }
+  },
+  {
+    "id": "case_006",
+    "scenario": "Post-operative knee replacement follow-up",
+    "transcript": "Doctor: It's been four weeks since your right total knee replacement. How are you doing?\nPatient: Pretty well. The swelling is down a lot. I can bend it to about 90 degrees.\nDoctor: That's right on track. Any redness, warmth, or drainage from the incision?\nPatient: No, it looks clean.\nDoctor: Let me check the range of motion. Good — you're at 95 degrees. The goal is 110 to 120 by eight weeks. Are you keeping up with physical therapy?\nPatient: Three times a week, yes.\nDoctor: Perfect. Continue the celecoxib 200mg once daily for anti-inflammatory management for another two weeks, then you can stop. I want an X-ray of the right knee today to confirm prosthesis alignment. Next visit in four weeks.\nPatient: When can I drive?\nDoctor: Since it's your right knee you'll need to wait until you can perform an emergency stop reliably — typically six weeks post-op. I'll clear you at next visit if things continue well.",
+    "expected": {
+      "urgency_tag": "normal",
+      "medications": ["celecoxib 200mg once daily"],
+      "diagnoses": ["status post right total knee arthroplasty"],
+      "action_items": ["continue physical therapy 3x weekly", "X-ray right knee today", "continue celecoxib 200mg for 2 more weeks", "return in 4 weeks", "driving clearance at 6 weeks post-op"]
+    }
+  },
+  {
+    "id": "case_007",
+    "scenario": "Migraine with new prescription",
+    "transcript": "Doctor: You mentioned your migraines have been getting worse. How often are you getting them?\nPatient: Three or four times a month now. The over-the-counter stuff isn't touching them anymore.\nDoctor: How long do they last and do you get the aura beforehand?\nPatient: Six to twelve hours, and yes I get visual zigzag lines about 20 minutes before.\nDoctor: Classic migraine with aura. I'm going to prescribe sumatriptan 50mg — take one at the first sign of the migraine. You can repeat after two hours if it comes back, but don't take more than two doses in 24 hours.\nPatient: Anything I should avoid?\nDoctor: Do you smoke or have any history of heart disease or stroke?\nPatient: No to both.\nDoctor: Good. Avoid if you have chest pain after taking it. I also want you to keep a headache diary to identify triggers. Come back in six weeks to see how the sumatriptan is working and whether we need to add a preventive agent like topiramate.",
+    "expected": {
+      "urgency_tag": "prescription",
+      "medications": ["sumatriptan 50mg"],
+      "diagnoses": ["migraine with aura"],
+      "action_items": ["start sumatriptan 50mg at migraine onset", "keep headache diary", "return in 6 weeks", "consider topiramate for prevention if needed"]
+    }
+  },
+  {
+    "id": "case_008",
+    "scenario": "Cardiac referral",
+    "transcript": "Doctor: Your stress test from last week came back with some concerning findings. There was evidence of inducible ischemia in the anterior wall.\nPatient: What does that mean exactly?\nDoctor: It means part of your heart muscle isn't getting enough blood during exertion. Given your age of 62, your diabetes, and this result, I want you seen by a cardiologist as soon as possible.\nPatient: Is it an emergency?\nDoctor: Not an emergency right now since you're not having active symptoms, but we should not delay. I'm referring you to Dr. Patel in cardiology — the office will call you within 48 hours. In the meantime, if you get chest pain, pressure, or shortness of breath, go straight to the emergency room.\nPatient: Should I change my medications?\nDoctor: I'm adding aspirin 81mg daily starting today. Continue your metformin and atorvastatin as usual. Avoid strenuous exercise until you've been evaluated by cardiology.",
+    "expected": {
+      "urgency_tag": "referral",
+      "medications": ["aspirin 81mg daily", "metformin", "atorvastatin"],
+      "diagnoses": ["inducible myocardial ischemia", "abnormal stress test", "coronary artery disease suspected"],
+      "action_items": ["referral to cardiology", "start aspirin 81mg daily", "avoid strenuous exercise", "go to ER if chest pain or shortness of breath"]
+    }
+  },
+  {
+    "id": "case_009",
+    "scenario": "Acute low back pain",
+    "transcript": "Doctor: You said the back pain started two days ago lifting boxes?\nPatient: Yes, I felt a pop and then sharp pain in my lower back on the left side.\nDoctor: Any numbness or tingling down your leg?\nPatient: No, just the back.\nDoctor: Any bowel or bladder problems?\nPatient: No.\nDoctor: Good. On examination you have muscle spasm in the left paraspinal muscles and limited forward flexion. Straight leg raise is negative bilaterally, which is reassuring. This is a lumbar muscle strain. I'm prescribing cyclobenzaprine 5mg three times a day for muscle spasm — use it for five days maximum and don't drive while taking it. Ibuprofen 600mg three times a day with food for inflammation.\nPatient: Should I stay in bed?\nDoctor: No, bed rest is actually counterproductive. Stay as active as you comfortably can. Ice for 20 minutes several times a day for the first 48 hours then switch to heat. If you're not improving in two weeks come back and we'll order imaging.",
+    "expected": {
+      "urgency_tag": "prescription",
+      "medications": ["cyclobenzaprine 5mg three times daily", "ibuprofen 600mg three times daily"],
+      "diagnoses": ["acute lumbar muscle strain"],
+      "action_items": ["stay active as tolerated", "ice 20 minutes for first 48 hours then heat", "return in 2 weeks if not improving", "imaging if no improvement"]
+    }
+  },
+  {
+    "id": "case_010",
+    "scenario": "Hypothyroidism lab review and adjustment",
+    "transcript": "Doctor: Your TSH came back at 6.8, which is still elevated. How are you feeling?\nPatient: Still a bit fatigued. My hair has been falling out more than usual and I've been gaining weight even though my diet hasn't changed.\nDoctor: Those are all consistent with undertreated hypothyroidism. You're currently on levothyroxine 75 micrograms. I'm going to increase it to 100 micrograms. Take it on an empty stomach first thing in the morning and wait at least 30 minutes before eating.\nPatient: When will I feel better?\nDoctor: It takes four to six weeks for the new dose to fully take effect. We'll recheck your TSH and free T4 in six weeks. Also avoid taking it within four hours of calcium or iron supplements as they interfere with absorption.\nPatient: I take a calcium supplement in the morning.\nDoctor: Take the levothyroxine when you wake up and delay the calcium until lunchtime.",
+    "expected": {
+      "urgency_tag": "prescription",
+      "medications": ["levothyroxine 100 micrograms"],
+      "diagnoses": ["hypothyroidism", "undertreated hypothyroidism"],
+      "action_items": ["increase levothyroxine to 100 micrograms", "TSH and free T4 recheck in 6 weeks", "take levothyroxine on empty stomach 30 minutes before food", "separate calcium supplement by 4 hours"]
+    }
+  },
+  {
+    "id": "case_011",
+    "scenario": "Asthma exacerbation",
+    "transcript": "Doctor: You called the after-hours line last night. How's your breathing right now?\nPatient: I'm still wheezing. I've used my albuterol inhaler six times in the last 24 hours and it's only helping a little bit.\nDoctor: Are you speaking in full sentences okay? Any bluish coloring around lips?\nPatient: I can talk but I feel really short of breath.\nDoctor: Let me check your peak flow. You're at 55% of your personal best — that's in the red zone. I'm going to give you a nebulizer treatment right now in the office with albuterol. I'm also prescribing a prednisone burst — 40mg daily for five days starting today. If your peak flow doesn't improve to above 70% in the next hour I'm sending you to the emergency department.\nPatient: Should I double my Flovent?\nDoctor: Yes, double your fluticasone from 88mcg to 176mcg twice daily for the next two weeks. Schedule a follow-up in five days so we can reassess and update your asthma action plan.",
+    "expected": {
+      "urgency_tag": "urgent",
+      "medications": ["albuterol nebulizer", "prednisone 40mg daily for 5 days", "fluticasone 176mcg twice daily"],
+      "diagnoses": ["acute asthma exacerbation"],
+      "action_items": ["nebulizer treatment in office", "prednisone 40mg for 5 days", "double fluticasone dose for 2 weeks", "go to ED if peak flow stays below 70%", "follow-up in 5 days"]
+    }
+  },
+  {
+    "id": "case_012",
+    "scenario": "Dermatology referral for skin lesion",
+    "transcript": "Doctor: You mentioned noticing a new mole on your back. Let me take a look. How long has it been there?\nPatient: I only noticed it about three months ago but my wife says it's been growing and the color has changed.\nDoctor: Looking at it I see it's about 8mm, asymmetric, and has two shades of brown with an irregular border. Those are features we take seriously. I want to refer you to dermatology for a biopsy.\nPatient: Is it cancer?\nDoctor: I can't diagnose it here but the characteristics are concerning for a dysplastic or possibly melanocytic lesion. Do not let anyone else remove it before the dermatologist sees it as we want a proper excisional biopsy.\nPatient: How long is the wait?\nDoctor: I'm marking this as urgent. You should be seen within two weeks. Until then avoid sun exposure on the area and use SPF 50+.",
+    "expected": {
+      "urgency_tag": "referral",
+      "medications": [],
+      "diagnoses": ["suspicious pigmented skin lesion", "atypical melanocytic lesion"],
+      "action_items": ["urgent referral to dermatology for biopsy", "do not remove lesion before dermatology evaluation", "avoid sun exposure on lesion", "use SPF 50+ sunscreen"]
+    }
+  },
+  {
+    "id": "case_013",
+    "scenario": "Annual physical exam - healthy adult",
+    "transcript": "Doctor: Good morning. Time for your annual physical. Any concerns or new symptoms?\nPatient: Not really. I've been feeling pretty good. I started running three months ago and lost about 8 pounds.\nDoctor: Excellent. Your blood pressure is 118 over 76 today, heart rate 64, BMI 24.2. Lung and heart exam are normal. Abdomen is soft and non-tender. Let me check your lab results from last week — lipid panel shows total cholesterol 182, LDL 104, HDL 58, triglycerides 100. Blood glucose fasting is 94. All within normal ranges.\nPatient: Do I need any vaccines?\nDoctor: You're up to date. I do recommend the flu vaccine in the fall. At your age, 42, we should schedule a colonoscopy screening starting at 45 — so in about three years. Continue your current lifestyle. No medication changes today.",
+    "expected": {
+      "urgency_tag": "normal",
+      "medications": [],
+      "diagnoses": ["healthy adult annual physical"],
+      "action_items": ["flu vaccine in fall", "colonoscopy screening at age 45", "continue current exercise and diet"]
+    }
+  },
+  {
+    "id": "case_014",
+    "scenario": "SSRI side effect and dose management",
+    "transcript": "Doctor: You've been on escitalopram 10mg for eight weeks now. How's it been?\nPatient: My mood is definitely better. But I've been having trouble reaching orgasm and my sex drive has gone way down.\nDoctor: That's a common side effect with SSRIs. The good news is it often improves with time. We have a few options: we can try adding bupropion 150mg once daily which can counteract the sexual side effects, or we can switch to a different antidepressant with a lower sexual side effect profile.\nPatient: I'd rather not switch since the escitalopram is working.\nDoctor: Then let's try adding bupropion 150mg in the morning. Don't take it in the evening as it can cause insomnia. Also be aware it can lower seizure threshold — any history of seizures?\nPatient: No.\nDoctor: Good. Come back in four weeks. If sexual function improves we'll continue both. If not, we'll reassess.",
+    "expected": {
+      "urgency_tag": "follow-up",
+      "medications": ["escitalopram 10mg", "bupropion 150mg once daily in morning"],
+      "diagnoses": ["major depressive disorder", "SSRI-induced sexual dysfunction"],
+      "action_items": ["add bupropion 150mg in the morning", "return in 4 weeks to reassess", "take bupropion in morning only to avoid insomnia"]
+    }
+  },
+  {
+    "id": "case_015",
+    "scenario": "Pediatric fever evaluation",
+    "transcript": "Doctor: Hi there, little one. Mom, tell me what's been going on.\nParent: She's been running a fever since yesterday, 101.5 to 102. She's been pulling at her right ear and is really fussy.\nDoctor: How old is she?\nParent: 18 months.\nDoctor: Any cold symptoms, vomiting, or diarrhea?\nParent: Runny nose for a few days before the fever started.\nDoctor: Let me take a look. The right tympanic membrane is bulging, red, and has reduced mobility on pneumatic otoscopy. Left ear and throat are clear. Lungs are clear. This is acute otitis media in the right ear.\nParent: Does she need antibiotics?\nDoctor: At her age with a bulging ear drum, yes. I'm prescribing amoxicillin 80mg per kilogram per day divided twice daily for ten days. She weighs 11 kilograms so that's about 440mg twice daily. Give her children's acetaminophen or ibuprofen for pain and fever. She can return to daycare 24 hours after starting antibiotics if fever is gone.\nParent: What if she's not better in a few days?\nDoctor: If no improvement in 48 to 72 hours on the antibiotics, bring her back. We may need to switch to a broader antibiotic.",
+    "expected": {
+      "urgency_tag": "prescription",
+      "medications": ["amoxicillin 440mg twice daily for 10 days", "acetaminophen or ibuprofen for pain and fever"],
+      "diagnoses": ["acute otitis media right ear"],
+      "action_items": ["amoxicillin 440mg twice daily for 10 days", "acetaminophen or ibuprofen for fever", "return if no improvement in 48-72 hours", "daycare return 24 hours after antibiotics if fever-free"]
+    }
+  }
+]

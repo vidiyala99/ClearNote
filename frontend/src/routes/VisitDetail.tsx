@@ -165,7 +165,7 @@ export default function VisitDetail() {
                         </div>
                      </>
                  ) : visit.status === 'ready' ? (
-                     <div className="text-center py-20 text-slate-400">SOAP nodes could not be loaded.</div>
+                     <div className="text-center py-20 text-slate-400">SOAP notes could not be loaded.</div>
                  ) : (
                      <div className="text-center py-20 text-slate-400 animate-pulse">Running diagnostic models...</div>
                  )}

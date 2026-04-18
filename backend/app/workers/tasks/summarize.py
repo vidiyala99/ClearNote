@@ -54,8 +54,6 @@ def summarize_visit(visit_id: str):
         db.execute(stmt)
         db.commit()
 
-    except Exception as e:
-         raise e
     finally:
          db.close()
 
